@@ -1,0 +1,256 @@
+// =========================================================
+// * Soft UI Dashboard - v1.0.7
+// =========================================================
+//
+// * Product Page: https://www.creative-tim.com/product/soft-ui-dashboard
+// * Copyright 2023 Creative Tim (https://www.creative-tim.com)
+//
+// Coded by www.creative-tim.com
+//
+// =========================================================
+//
+// * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+/*** CGenerales ***/
+
+$cDangerous: #a80808;
+$cDangerousBG: #ffc5c5;
+$cWarning: #f5c025;
+$cWarningBG: #ffd966;
+$cSuccess: #08a850;
+$cSuccessBG: #cbffe3;
+$cInfo: #0878a8;
+$cInfoBG: #c2edff;
+$cBlanco: #ffffff;
+$cNegro: #1d1e1c;
+
+// Bootstrap Functions
+@import "soft-ui-dashboard/bootstrap/functions";
+
+// Custom Variables
+@import "soft-ui-dashboard/custom/variables";
+
+// Theme Variables
+@import "soft-ui-dashboard/variables";
+
+// Bootstrap Core
+@import "soft-ui-dashboard/bootstrap/bootstrap";
+
+// Theme Core
+@import "soft-ui-dashboard/theme";
+
+// Custom Variables
+@import "soft-ui-dashboard/custom/styles";
+
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+
+@import "@nodeJS/ag-grid-community/styles/ag-grid.css";
+@import "@nodeJS/ag-grid-community/styles/ag-theme-material.css";
+@import "@nodeJS/ag-grid-community/styles/agGridMaterialFont.css";
+
+// alerts
+
+.navbar-vertical .navbar-brand > img,
+.navbar-vertical .navbar-brand-img {
+    max-width: 100%;
+    max-height: 2.5rem;
+}
+.icon-sm {
+    width: 30px;
+    height: 30px;
+}
+
+.alert-message {
+    position: fixed;
+    bottom: 5%;
+    right: 5%;
+    z-index: 2000;
+    padding: 2rem 4rem;
+    background-color: rgba($cBlanco, 0.85);
+    border-left: 0.5rem solid;
+    animation: alerts 0.75s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 0.3rem;
+        background-color: rgba($cBlanco, 0.5);
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 0.3rem;
+        background-color: $cNegro;
+        animation: loadAlert 4s linear;
+        animation-delay: 1s;
+    }
+    &.danger {
+        background-color: $cDangerousBG;
+        color: $cDangerous;
+        &::after {
+            background-color: $cDangerous;
+        }
+    }
+    &.warning {
+        background-color: $cWarningBG;
+        color: $cNegro;
+        border-color: $cWarning;
+        &::after {
+            background-color: $cWarning;
+        }
+    }
+    &.success {
+        background-color: $cSuccessBG;
+        color: $cSuccess;
+        &::after {
+            background-color: $cSuccess;
+        }
+    }
+    &.info {
+        background-color: $cInfoBG;
+        color: $cInfo;
+        &::after {
+            background-color: $cInfo;
+        }
+    }
+}
+
+@keyframes alerts {
+    0% {
+        margin-bottom: -20rem;
+    }
+    100% {
+        margin-bottom: 0;
+    }
+}
+
+@keyframes loadAlert {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #75b409;
+    outline: 0;
+    box-shadow: 0 0 0 1px #75b409;
+}
+
+.form-select:focus {
+    border-color: #75b409;
+    outline: 0;
+    box-shadow: 0 0 0 1px #75b409;
+}
+
+hr {
+    margin: 0 !important;
+}
+
+.loader {
+    margin: 0 0 2em;
+    height: 100px;
+    width: 20%;
+    text-align: center;
+    padding: 1em;
+    margin: 0 auto 1em;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.opaco {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    background-color: #001a57c5;
+    z-index: 1;
+    display: none;
+    opacity: 0;
+    transition: all 0.5s;
+    .loader {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+    }
+}
+
+.loadingActive {
+    opacity: 1;
+    display: block;
+    z-index: 9999;
+}
+
+.button-grid {
+    padding: 8px;
+    margin: 10px 3px;
+}
+
+.ag-theme-material {
+    --ag-material-accent-color : $cSuccess
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #82c500;
+    font-weight: 700;
+}
+
+.nav-link {
+    color: #001a57
+}
+
+.show-- {
+   display: block;
+}
+
+.hide-- {
+    display: none;
+}
+
+
+.padding-container {}
+
+.height-grid-dashboard-portero {
+    height: calc(100vh - 180px)
+}
+
+.height-grid-dashboard-administrador-portero-departamento {
+    height: calc(100vh - 240px)
+}
+
+.margin-top-administrador{}
+
+@media (max-width: 800px) {
+    .padding-container {
+        padding: 0 !important;
+    }
+
+    .mt-3 {
+        margin-top: 0rem !important;
+    }
+
+    .card .card-header {
+        padding: 1.5rem 1.5rem 0;
+    }
+
+    .height-grid-dashboard-portero {
+        height: calc(100vh - 105px)
+    }
+
+    .height-grid-dashboard-administrador-portero-departamento {
+        height: calc(100vh - 195px)
+    }
+
+    .margin-top-administrador {
+        margin-top: 0.5rem !important;
+    }
+}

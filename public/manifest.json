@@ -1,0 +1,16 @@
+{
+    "name": "Nexo Airbnb",
+    "short_name": "Nexo Airbnb",
+    "start_url": "/index.php",
+    "background_color": "#ffffff",
+    "description": "Nexo Airbnb",
+    "display": "standalone",
+    "theme_color": "#ffffff",
+    "icons": [
+        {
+            "src": "logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
