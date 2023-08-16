@@ -1,11 +1,11 @@
 {
-    "name": "Nexo Airbnb",
-    "short_name": "Nexo Airbnb",
+    "name": "Nexo RIT",
+    "short_name": "Nexo RIT",
     "start_url": "/index.php",
-    "background_color": "#ffffff",
-    "description": "Nexo Airbnb",
+    "background_color": "#001a57",
+    "description": "Registro de Inquilinos Temporales",
     "display": "standalone",
-    "theme_color": "#ffffff",
+    "theme_color": "#001a57",
     "icons": [
         {
             "src": "logo.png",
