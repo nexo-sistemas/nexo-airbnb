@@ -19,6 +19,8 @@ class FichaController extends Controller
             'response' => DB::select("
             SELECT
             ficha.id fichaid,
+            users.nacionalidad,
+            users.principal,
             users.id users_id,
             CONCAT(users.nombre,' ',NULLIF(users.apellido,'')) usuario,
             (SELECT unidad_inmobiliaria.departamento FROM unidad_inmobiliaria WHERE unidad_inmobiliaria.id = ficha.departamento_id) departamento,
@@ -76,6 +78,8 @@ class FichaController extends Controller
             $user->tipo_documento_id = $request->input("tipo_documento_id-" . $i);
             $user->numero_documento = $request->input("numero_documento-" . $i);
             $user->user_type = '4';
+            $user->principal = $request->input("principal-" . $i);
+            $user->nacionalidad = $request->input("nacionalidad-" . $i);
             $user->save();
 
             $fichaUser = new FichaUser();
@@ -103,6 +107,9 @@ class FichaController extends Controller
             users.id users_id,
             users.`uuid` users_key,
             users.nombre,
+            users.nacionalidad,
+            users.principal,
+            users.hora_salida,
             IFNULL(users.apellido,'') apellido,
             (SELECT unidad_inmobiliaria.departamento FROM unidad_inmobiliaria WHERE unidad_inmobiliaria.id = ficha.departamento_id) departamento,
             (SELECT tipo_documento.tipo FROM tipo_documento WHERE tipo_documento.id = users.tipo_documento_id) tipodocumento,
@@ -176,6 +183,7 @@ class FichaController extends Controller
     public function updateAdjunto(Request $request)
     {
         date_default_timezone_set("America/Lima");
+
         $directory = 'app-arbn';
         if (!$request->hasFile('file')) {
             return response()->json([
@@ -184,11 +192,14 @@ class FichaController extends Controller
             ], 422);
         }
 
+
         $adjunto = $request->file('file')->store($directory, 'vultr');
         $user = User::find($request->userKey);
         $user->hora_ingreso = date("d/m/Y H:i");
         $user->adjunto_conserje = $adjunto;
         $user->save();
+
+        $image = base64_encode(file_get_contents($request->file('file')));
 
         $returnResponse = DB::select(
             "SELECT f.*,
@@ -210,8 +221,36 @@ class FichaController extends Controller
         return response()->json([
             'ok' => true,
             'message' => "Se guardo correctamente",
-            'response' => $returnResponse
+            'response' => $returnResponse,
+            'file' => $image
         ]);
 
+    }
+
+    public function updateFechaSalida(Request $request){
+        $user = User::find($request->userKey);
+        $user->hora_salida = $request->fechaSalida;
+        $user->save();
+        $returnResponse = DB::select(
+            "SELECT f.*,
+                (
+                    SELECT JSON_OBJECT('numPropietario',us.celular,'departamento',uni.departamento)
+                    FROM unidad_inmobiliaria uni
+                    JOIN users us ON uni.propietario = us.id AND us.estado = TRUE
+                    WHERE uni.estado = TRUE AND uni.id = f.departamento_id
+                ) dataPropietario
+                FROM ficha_user fu
+                JOIN ficha f ON fu.ficha_id = f.id AND f.estado = TRUE
+                WHERE fu.estado = TRUE AND fu.user_id = ?
+                ",
+            [$user->id]
+        )[0];
+
+        $returnResponse->user = $user;
+        return response()->json([
+            'ok' => true,
+            'message' => "Se guardo correctamente",
+            'response' => $returnResponse
+        ]);
     }
 }

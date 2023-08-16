@@ -1,4 +1,12 @@
+import moment from "moment/moment";
+
 export default async (resp, administrador = false, dataDepartamentos = []) => {
+
+    let hoy = moment().add(moment.duration("24:00:00")),
+        fecSalida = moment(resp.salida);
+
+    console.log(fecSalida)
+
     if (administrador) {
         document.getElementById('foot-modal-detalle').innerHTML = `
             <button type="button" class="btn btn-secondary" id="btnCancelarGuardarEntidad" data-bs-dismiss="modal">Cerrar</button>
@@ -12,17 +20,17 @@ export default async (resp, administrador = false, dataDepartamentos = []) => {
     }
 
 
-    let content_adjunto;
-
+    let content_adjunto_llegada;
+    let content_adjunto_salida;
 
     if ( administrador ) {
-        content_adjunto = `
+        content_adjunto_llegada = `
             ${ (resp.adjunto_conserje) ?
                 `<div class="col-md-12">
                     <span style="font-size: 13px"><b>Recepción de llegada</b></span>
                 </div>
                 <hr style="margin-bottom: 10px !important">
-                
+
                 <div class="col-md-6 col-lg-6">
                     <label for="numero_documento" class="form-label">Fecha y Hora de LLegada del Huesped</label>
                     <input type="text" class="form-control" value="${resp.hora_ingreso}" disabled="disabled">
@@ -38,15 +46,31 @@ export default async (resp, administrador = false, dataDepartamentos = []) => {
                 : ''
             }
         `
+
+        content_adjunto_salida = `
+            ${ (resp.hora_salida) ?
+                `<div class="col-md-12 mt-3">
+                    <span style="font-size: 13px"><b>Recepción de Salida</b></span>
+                </div>
+                <hr style="margin-bottom: 10px !important">
+
+                <div class="col-md-6 col-lg-6">
+                    <label for="numero_documento" class="form-label">Fecha y hora de salida del huesped</label>
+                    <input type="datetime-local" class="form-control" value="${resp.hora_salida}" disabled="disabled">
+                </div>
+                `
+                : ''
+            }
+        `
     } else {
-       
-        content_adjunto = `
+
+        content_adjunto_llegada = `
             ${ (resp.adjunto_conserje) ?
                 `<div class="col-md-12">
                     <span style="font-size: 13px"><b>Recepción de llegada</b></span>
                 </div>
                 <hr style="margin-bottom: 10px !important">
-                
+
                 <div class="col-md-6 col-lg-6">
                     <label for="numero_documento" class="form-label">Fecha y Hora de LLegada del Huesped</label>
                     <input type="text" class="form-control" value="${resp.hora_ingreso}" disabled="disabled">
@@ -59,7 +83,7 @@ export default async (resp, administrador = false, dataDepartamentos = []) => {
                     </div>
                 </div>
                 `
-                : 
+                :
                 `
                 <div class="col-md-12">
                     <span style="font-size: 13px"><b>Recepción de llegada</b></span>
@@ -68,12 +92,47 @@ export default async (resp, administrador = false, dataDepartamentos = []) => {
                 <div class="col-md-6 col-lg-6">
                     <label for="adjunto" class="form-label">Adjuntar documento</label>
                     <div class="input-group">
-                        <input type="file" class="form-control adjunto-ficha" id="adjunto" required>
+                        <input type="file" class="form-control adjunto-ficha" accept="image/*" capture="camera" id="adjunto" required>
                     </div>
                 </div>
                 `
             }
         `
+
+        if (hoy > fecSalida) {
+            content_adjunto_salida = `
+                ${ (resp.hora_salida) ?
+                    `<div class="col-md-12 mt-3">
+                        <span style="font-size: 13px"><b>Recepción de Salida</b></span>
+                    </div>
+                    <hr style="margin-bottom: 10px !important">
+
+                    <div class="col-md-6 col-lg-6">
+                        <label for="numero_documento" class="form-label">Fecha y hora de salida del huesped</label>
+                        <input type="datetime-local" class="form-control" value="${resp.hora_salida}" disabled="disabled">
+                    </div>
+                    `
+                    :
+                    `
+                    <div class="col-md-12 mt-3">
+                        <span style="font-size: 13px"><b>Recepción de Salida</b></span>
+                    </div>
+                    <hr style="margin-bottom: 10px !important">
+
+                    <div class="col-md-6 col-lg-6">
+                        <label for="numero_documento" class="form-label">Fecha y hora de salida del huesped</label>
+                        <input type="datetime-local" class="form-control" id="fecha_salida_huesped"required>
+                    </div>
+                    <div class="col-md-6 col-lg-6">
+                        <center><button type="button" class="btn btn-primary mt-4" style="background: #001a57" id="btnGuardarFechaSalida">Guardar Fecha de Salida</button></center>
+                    </div>
+                    `
+                }
+            `
+        } else {
+            content_adjunto_salida = ""
+        }
+
     }
 
     return `
@@ -139,19 +198,24 @@ export default async (resp, administrador = false, dataDepartamentos = []) => {
                         Documento</label>
                     <input type="text" class="form-control" value="${resp.numero_documento}" disabled="disabled">
                 </div>
+                <div class="col-md-6 col-lg-3">
+                    <label for="nacionalidad" class="form-label">Nacionalidad</label>
+                    <input type="text" class="form-control" value="${resp.nacionalidad ?? ''}" disabled="disabled">
+                </div>
 
                 <div class="col-md-6 col-lg-6 mt-3">
                     <div class="d-grid d-md-flex justify-content-md-end">
-                        ${ (resp.adjunto) ? 
+                        ${ (resp.adjunto) ?
                             `<a href="/s?archive=${resp.adjunto}" target="_blank" class="btn btn-primary btn-sm" type="button" >
                                 Ver documento
                             </a>`
                             :
                             ''
-                        } 
+                        }
                     </div>
                 </div>
-                ${content_adjunto}
+                ${content_adjunto_llegada}
+                ${content_adjunto_salida}
             </div>
         </form>
     `

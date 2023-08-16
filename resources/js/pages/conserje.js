@@ -2,8 +2,9 @@ import { alertMessage, form_data, nxmodal, serialize } from "../function";
 import fichas from "../functions/fichas";
 import mensagge from "../functions/mensagge";
 import Compressor from 'compressorjs';
-import { connectionState, deleteInstance, generateQr, sendMessage } from "../functions/whatsapp-conect";
+import { connectionState, deleteInstance, generateQr, sendMessage, sendMessageMedia } from "../functions/whatsapp-conect";
 import cerrarSession from "../functions/cerrar-session";
+import messaggeSalida from "../functions/messagge-salida";
 export default (async () => {
 
     let formFichaDetalle;
@@ -61,12 +62,8 @@ export default (async () => {
             if (formGuardarDetalleFicha.checkValidity()) {
                 document.getElementById('loading-_-').classList.add('loadingActive');
                 const cstateValidate = await connectionState();
-
-                console.log(cstateValidate)
-
                 if (cstateValidate?.state === 'open') {
                     const userKey = document.getElementById('user_key__').value;
-
                     formFichaDetalle.append('userKey', userKey);
                     var { data } = await axios.post(`${apiURL}/ficha/portero/update/adjunto`, formFichaDetalle)
                     if (data.ok === true) {
@@ -74,9 +71,10 @@ export default (async () => {
                         modalDetalle.hide();
 
                         let dataPropietario = JSON.parse(data.response.dataPropietario);
-                        sendMessage({
+                        sendMessageMedia({
                             numero: dataPropietario.numPropietario,
-                            message: adjuntoData//mensagge(data.response, adjuntoData)
+                            message: mensagge(data.response, adjuntoData),
+                            media: data.file
                         })
 
                         document.getElementById('loading-_-').classList.remove('loadingActive');
@@ -87,8 +85,6 @@ export default (async () => {
                     }
 
                 } else {
-
-                    console.log("hola perra")
                     await deleteInstance();
                     await generateQr().then((resp) => {
                         document.getElementById('loading-_-').classList.remove('loadingActive');
@@ -99,13 +95,65 @@ export default (async () => {
                 formGuardarDetalleFicha.classList.add("was-validated");
             }
         }
+
+
+        e.stopPropagation()
+    })
+
+    document.getElementById('flicha-detalle')?.addEventListener('click', async (e) => {
+        if (e.target.id === 'btnGuardarFechaSalida') {
+            const formGuardarDetalleFicha = document.getElementById("flicha-detalle").querySelector('#formDetalleFicha');
+            if (formGuardarDetalleFicha.checkValidity()) {
+                document.getElementById('loading-_-').classList.add('loadingActive');
+                const cstateValidate = await connectionState();
+                if (cstateValidate?.state === 'open') {
+                    const userKey = document.getElementById('user_key__').value;
+                    formFichaDetalle.append('userKey', userKey);
+                    var { data } = await axios.post(`${apiURL}/ficha/portero/update/fecha-salida`,
+                    {
+                        fechaSalida : document.getElementById('fecha_salida_huesped').value,
+                        userKey : document.getElementById('user_key__').value
+                    });
+                    if (data.ok === true) {
+                        formGuardarDetalleFicha.classList.remove('was-validated')
+                        modalDetalle.hide();
+                        let dataPropietario = JSON.parse(data.response.dataPropietario);
+                        sendMessage({
+                            numero: dataPropietario.numPropietario,
+                            message: messaggeSalida(data.response, document.getElementById('fecha_salida_huesped').value),
+                        })
+
+                        document.getElementById('loading-_-').classList.remove('loadingActive');
+                        await alertMessage(
+                            "success",
+                            "se guardo correctamente."
+                        );
+                    }
+
+                } else {
+                    await deleteInstance();
+                    await generateQr().then((resp) => {
+                        document.getElementById('loading-_-').classList.remove('loadingActive');
+                    });
+                }
+
+
+
+
+            } else {
+                formGuardarDetalleFicha.classList.add("was-validated");
+            }
+        }
+
         e.stopPropagation()
     })
 
 
 
+
     document.getElementById("flicha-detalle").addEventListener('change', async (e) => {
         formFichaDetalle = new FormData()
+        formFichaDetalle.append('nanme', 'Hola que tal')
         if (e.target.id === "adjunto") {
             const file = e.target.files[0];
             if (!file) {
@@ -126,8 +174,6 @@ export default (async () => {
             } else {
                 formFichaDetalle.append('file', file)
             }
-
-            console.log(serialize(formFichaDetalle))
         }
 
     })

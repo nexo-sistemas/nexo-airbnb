@@ -66,7 +66,7 @@ const generateQr = async () => {
     modalQRWhatsapp.show();
 }
 
-const sendMessage = async (options = {}) => {
+const sendMessageMedia = async (options = {}) => {
     const sendTexT = await fetch(`${apiURLWHATSAPP}/message/sendMedia/${_user.keyUser}`, {
         method: "POST",
         headers: {
@@ -82,8 +82,31 @@ const sendMessage = async (options = {}) => {
                 mediaMessage : {
                     mediatype : "image",
                     fileName : "image.jpeg",
-                    caption: "Description",
-                    media : "https://previews.123rf.com/images/shushanto/shushanto2209/shushanto220900703/191842443-imagen-de-fondo-de-la-ilustraci%C3%B3n-del-arte-conceptual-de-la-destrucci%C3%B3n-de-los-planetas.jpg"
+                    caption: options.message,
+                    media : options.media
+                }
+            }
+        )
+    })
+
+    return sendTexT;
+}
+
+const sendMessage = async (options = {}) => {
+    const sendTexT = await fetch(`${apiURLWHATSAPP}/message/sendText/${_user.keyUser}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "apikey": `${apiKey__}`
+        },
+        body: JSON.stringify(
+            {
+                number: options.numero,
+                options: {
+                    delay: 1200
+                },
+                textMessage : {
+                    text: options.message
                 }
             }
         )
@@ -93,7 +116,9 @@ const sendMessage = async (options = {}) => {
 }
 
 
-export { generateQr, connectionState, deleteInstance, sendMessage }
+
+
+export { generateQr, connectionState, deleteInstance, sendMessage, sendMessageMedia }
 
 
 

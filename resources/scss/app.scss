@@ -196,38 +196,40 @@ hr {
 }
 
 .ag-theme-material {
-    --ag-material-accent-color : $cSuccess
+    --ag-material-accent-color: $cSuccess;
 }
 
-.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
     color: #82c500;
     font-weight: 700;
 }
 
 .nav-link {
-    color: #001a57
+    color: #001a57;
 }
 
 .show-- {
-   display: block;
+    display: block;
 }
 
 .hide-- {
     display: none;
 }
 
-
-.padding-container {}
+.padding-container {
+}
 
 .height-grid-dashboard-portero {
-    height: calc(100vh - 180px)
+    height: calc(100vh - 180px);
 }
 
 .height-grid-dashboard-administrador-portero-departamento {
-    height: calc(100vh - 240px)
+    height: calc(100vh - 240px);
 }
 
-.margin-top-administrador{}
+.margin-top-administrador {
+}
 
 @media (max-width: 800px) {
     .padding-container {
@@ -243,14 +245,18 @@ hr {
     }
 
     .height-grid-dashboard-portero {
-        height: calc(100vh - 105px)
+        height: calc(100vh - 105px);
     }
 
     .height-grid-dashboard-administrador-portero-departamento {
-        height: calc(100vh - 195px)
+        height: calc(100vh - 195px);
     }
 
     .margin-top-administrador {
         margin-top: 0.5rem !important;
     }
+}
+
+.rag-green {
+    background-color: lightgreen;
 }

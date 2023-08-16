@@ -39,6 +39,7 @@ Route::group([
     Route::post('/auth/logout',[AuthController::class, 'logout']);
     Route::put('/ficha/administrador/update/fechas/{id}', [FichaController::class, 'updateFechasAdministrador']);
     Route::post('/ficha/portero/update/adjunto', [FichaController::class, 'updateAdjunto']);
+    Route::post('/ficha/portero/update/fecha-salida', [FichaController::class, 'updateFechaSalida']);
 });
 
 Route::resource('/ficha', FichaController::class);

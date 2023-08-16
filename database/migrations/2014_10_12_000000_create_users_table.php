@@ -19,10 +19,13 @@ return new class extends Migration
             $table->string('apellido', 150)->nullable();
             $table->string('celular', 25)->nullable();
             $table->string('numero_documento', 50)->nullable();
+            $table->string('nacionalidad', 80)->nullable();
             $table->string('usuario')->nullable();
             $table->string('adjunto')->nullable();
             $table->string('adjunto_conserje')->nullable();
             $table->string('hora_ingreso')->nullable();
+            $table->string('hora_salida')->nullable();
+            $table->char('principal',2)->nullable()->comment('SI-Huesped Principal,NO-normal');
             $table->string('password_vista')->nullable();
             $table->string('password')->nullable();
             $table->char('user_type',1)->nullable()->comment('1-admin,2-administrador, 3-conserge o portero, 4- inquilino o Huesped, 5- Propietario');

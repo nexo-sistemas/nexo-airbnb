@@ -8,6 +8,13 @@ import { RowGroupingModule } from "@ag-grid-enterprise/row-grouping";
 import fichaDetalle from "../component/fichaDetalle";
 
 export default async (userType = '3', modalDetalle) => {
+
+    function cellClass(params) {
+       if (params.value) {
+            return ( (params.data.principal) && params.data.principal === 'SI' ) ? 'rag-green' : '';
+       }
+    }
+
     let filterParams = {
         comparator: (filterLocalDateAtMidnight, cellValue) => {
             var dateAsString = cellValue;
@@ -79,12 +86,12 @@ export default async (userType = '3', modalDetalle) => {
     let administrador__ = (userType === '2') ? true : false;
 
     const columnDefs = [
-        { field: "departamento", headerName: "Departamento", width: 180, rowGroup: true, hide: false },
-        { field: "usuario", headerName: "Usuario", width: 300 },
-        { field: "tipodocumento", headerName: "Tipo de documento", width: 200 },
-        { field: "numero_documento", headerName: "Documento", width: 200 },
-        { field: "ingreso", headerName: "Ingreso", width: 200, filter: 'agDateColumnFilter', filterParams: filterParams },
-        { field: "salida", headerName: "Salida", width: 200, filter: 'agDateColumnFilter', filterParams: filterParams },
+        { field: "departamento", headerName: "Departamento", width: 180, rowGroup: true, hide: false, cellClass: cellClass },
+        { field: "usuario", headerName: "Usuario", width: 300, cellClass: cellClass },
+        { field: "tipodocumento", headerName: "Tipo de documento", width: 200, cellClass: cellClass },
+        { field: "numero_documento", headerName: "Documento", width: 200, cellClass: cellClass },
+        { field: "ingreso", headerName: "Ingreso", width: 200, filter: 'agDateColumnFilter', filterParams: filterParams, cellClass: cellClass },
+        { field: "salida", headerName: "Salida", width: 200, filter: 'agDateColumnFilter', filterParams: filterParams, cellClass: cellClass },
         {
             field: "fichaid",
             headerName: "Acciones",
