@@ -17,12 +17,9 @@ window.axios.interceptors.response.use(function (response) {
 
     console.log()
     if (401 === error.response.status) {
-        if ( document.location.pathname === '/') {
-            alertMessage('danger', error.response.data.message);
-            return;
-        }
-
-        window.location.href = '/'
+        alertMessage('danger', error.response.data.message);
+        return;
+        //window.location.href = '/'
     }
 
     if (422 === error.response.status) {

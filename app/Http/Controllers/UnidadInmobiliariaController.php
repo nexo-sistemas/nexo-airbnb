@@ -83,4 +83,19 @@ class UnidadInmobiliariaController extends Controller
             'response' => $unidad
         ]);
     }
+
+    public function unidadXEntidad($uuidUsuario, $entidadID) {
+
+        $response = DB::select("
+            SELECT id, `uuid`, departamento
+            FROM unidad_inmobiliaria
+            WHERE estado = TRUE AND entidad_id = ? AND propietario = (SELECT id FROM users WHERE `uuid` = ?)
+        ",[$entidadID, $uuidUsuario]);
+
+        return response()->json([
+            'ok' => true,
+            'response' => $response
+        ]);
+    }
+
 }

@@ -17,15 +17,26 @@
             <div class="card z-index-0">
                 <div class="card-body">
                     <form class="row g-3" class="needs-validation" id="ficha-form" novalidate>
-                        <input type="hidden" name="key" value="{{ $key }}">
+                        <input type="hidden" name="uuidUsuario" id="uuidUsuario" value="{{ $uuidUsuario }}">
+                        @if ( count($entidad) > 1 )
+                            <div class="col-md-6 col-lg-3">
+                                <label for="entidad" class="form-label"><span
+                                        style="color: red">(*)</span>Edificio</label>
+                                <select name="entidad" id="entidad" class="form-select" required>
+                                    @foreach ($entidad as $ent)
+                                        <option value='{{ $ent->id }}'>{{ $ent->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                           <input type="hidden" name="entidad" id="entidad" value="{{ $entidad[0]->id }}">
+                        @endif
+
                         <div class="col-md-6 col-lg-3">
                             <label for="departamento" class="form-label"><span
                                     style="color: red">(*)</span>Departamento</label>
-                            <select name="departamento" id="departamento" class="form-select" required>
+                            <select name="departamento_id" id="departamento" class="form-select" required>
                                 <option selected value="">Seleccionar</option>
-                                @foreach ($unidades as $unidad)
-                                    <option value='{{ $unidad->id }}'>{{ $unidad->departamento }}</option>
-                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6 col-lg-3">
@@ -63,8 +74,7 @@
                         </div>
 
                         <div class="col-md-6 col-lg-3">
-                            <label for="infantes" class="form-label"><span style="color: red">(*)</span>Incluye
-                                Infantes</label>
+                            <label for="infantes" class="form-label"><span style="color: red">(*)</span>Incluye niños</label>
                             <select id="infantes" name="infantes" class="form-select" required>
                                 <option selected value="">Seleccionar</option>
                                 <option value='si'>Si</option>

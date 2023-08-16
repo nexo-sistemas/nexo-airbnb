@@ -21,7 +21,7 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials)) {
             return response()->json([
                 'ok' => false,
-                'message' => 'Email o contraseña inválidos, o no tiene acceso.',
+                'message' => 'La contraseña no es correcta, o no tiene acceso.',
             ], 401);
         }
 

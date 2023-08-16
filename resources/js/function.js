@@ -110,5 +110,6 @@ export {
     form_data,
     alertMessage,
     nxmodal,
-    nxtoast
+    nxtoast,
+    serialize
 };

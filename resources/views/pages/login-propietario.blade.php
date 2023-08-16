@@ -26,7 +26,7 @@
                                 <h5>Iniciar Session</h5>
                             </div>
                             <div class="card-body">
-                                <form role="form text-left" class="needs-validation" id="login-form" novalidate>
+                                <form role="form text-left" class="needs-validation" id="login-form-propietario" novalidate>
 
                                     <input type="hidden" name="usuario" value="{{ $user->uuid }}">
                                     <div class="mb-3">
@@ -36,7 +36,7 @@
 
                                     @if ($user->password)
 
-                                        <input type="hidden" name="passPropietario" value="true">
+                                        <input type="hidden" name="passPropietario" id="passPropietario" value="1">
 
                                         <div class="mb-3">
                                             <input type="password" class="form-control" name="password"
@@ -44,20 +44,20 @@
                                                 aria-describedby="password-addon" required>
                                         </div>
                                     @else
-                                        <input type="hidden" name="passPropietario" value="false">
+                                        <input type="hidden" name="passPropietario" id="passPropietario" value="0">
                                         <div class="mb-3">
-                                            <input type="password" class="form-control" name="new-password"
-                                                placeholder="Ingrese nueva contraseña" aria-label="Ingrese nueva contraseña" required>
+                                            <input type="password" class="form-control" name="password"
+                                                placeholder="Ingrese nueva contraseña" aria-label="Ingrese nueva contraseña" id='password' required>
                                         </div>
                                         <div class="mb-3">
-                                            <input type="password" class="form-control" name="repley-password" placeholder="Repetir contraseña"
+                                            <input type="password" class="form-control" name="repleyPassword" id="repleyPassword" placeholder="Repetir contraseña"
                                                 aria-label="Repetir contraseña" aria-describedby="Repetir contraseña" required>
                                         </div>
                                     @endif
 
                                     <div class="text-center">
                                         <button type="button" class="btn bg-gradient-dark w-100 my-4 mb-2"
-                                            id="btn-form-login">Ingresar</button>
+                                            id="btn-form-login-propietario">Ingresar</button>
                                     </div>
                                 </form>
                             </div>

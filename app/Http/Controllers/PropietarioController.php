@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\UsuarioEntidad;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PropietarioController extends Controller
 {
@@ -81,36 +83,29 @@ class PropietarioController extends Controller
             'response' => $keyUnidad
         ]);
     }
-    public function login_propietario(Request $request, $uuid){
+    public function login_propietario(Request $request){
 
-        $credentials = $request->validate([
-            'password' => 'required',
-            ''
-        ]);
+        if ( $request->passPropietario == 0 ) {
+            $user = User::find($request->usuario);
+            $user->password = Hash::make($request->password);
+            $user->save();
+        }
 
-        $credentials['estado'] = true;
-        if (!Auth::attempt([
-
-
-        ])) {
+        if (!Auth::attempt(['uuid' => $request->usuario, 'password' => $request->password])) {
             return response()->json([
                 'ok' => false,
                 'message' => 'Email o contraseña inválidos, o no tiene acceso.',
             ], 401);
         }
 
-        $user = User::where('usuario', $request->usuario)->firstOrFail();
+        $user = User::where('uuid', $request->usuario)->firstOrFail();
         $token = $user->createToken('auth_token')->plainTextToken;
-
-        $entidad_id = UsuarioEntidad::where('user_id', $user->id)->first();
         return response()->json([
             'ok' => true,
             'user' => [
-                'nombre' => $user->nombre,
-                'usuario' => $user->usuario,
-                'keyUser' => $user->uuid,
-                'user_type' => $user->user_type,
-                'keyEntidad' => $entidad_id->entidad_id ?? 0
+                'uuid' => $user->uuid,
+                '_token' => $token,
+                '_usuario' => $request->password,
             ]
         ], 200);
     }

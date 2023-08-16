@@ -4,13 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Uuid;
 
 class Ficha extends Model
 {
-    use HasFactory;
+    use HasFactory, Uuid;
 
     protected $table = "ficha";
+    protected $primaryKey = 'uuid';
     protected $fillable = [
+        'uuid',
         'id',
         'departamento',
         'estacionamiento',

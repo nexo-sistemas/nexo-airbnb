@@ -12,6 +12,19 @@ export default async (numero) => {
         <label for="apellido-${numero}" class="form-label">Apellido</label>
         <input type="text" class="form-control" id="apellido-${numero}" name="apellido-${numero}" placeholder="Apellido">
     </div>
+
+    <!--
+    <div class="col-md-6 col-lg-3">
+        <label for="tipo_nacionalidad-${numero}" class="form-label"><span style="color: red">(*)</span>Nacionalidad</label>
+        <select id="tipo_nacionalidad-${numero}" name="tipo_nacionalidad-${numero}" class="form-select" required>
+            <option selected value="">Seleccionar</option>
+            <option value="2">DNI</option>
+            <option value="4">RUC</option>
+            <option value="5">PASAPORTE</option>
+            <option value="6">CARNET DE EXTRANJERÍA</option>
+        </select>
+    </div>
+    -->
     <div class="col-md-6 col-lg-3">
         <label for="tipo_documento_id-${numero}" class="form-label"><span style="color: red">(*)</span>Tipo de Documento</label>
         <select id="tipo_documento_id-${numero}" name="tipo_documento_id-${numero}" class="form-select" required>
@@ -28,11 +41,14 @@ export default async (numero) => {
             Documento</label>
         <input type="text" class="form-control" id="numero_documento-${numero}" name="numero_documento-${numero}" placeholder="Número de Documento" required>
     </div>
-    <div class="col-md-6 col-lg-6">
-        <label for="adjunto-${numero}" class="form-label">Adjuntar documento</label>
-        <div class="input-group">
-            <input type="file" class="form-control" id="adjunto-${numero}" name="adjunto-${numero}">
+
+    <!--
+        <div class="col-md-6 col-lg-6">
+            <label for="adjunto-${numero}" class="form-label">Adjuntar documento</label>
+            <div class="input-group">
+                <input type="file" class="form-control" id="adjunto-${numero}" name="adjunto-${numero}">
+            </div>
         </div>
-    </div>
+    -->
    `
 }

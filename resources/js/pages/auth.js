@@ -20,8 +20,8 @@ export default ( async() => {
                     alertMessage('danger', resp.data.message);
                     return true;
                 }
-                localStorage.setItem('_user', JSON.stringify(resp.data.user))
 
+                localStorage.setItem('_user', JSON.stringify(resp.data.user))
                 if (resp.data.user.user_type === '1') {
                     window.location.href = '/entidades'
                 } else if (resp.data.user.user_type === '2') {
@@ -29,6 +29,7 @@ export default ( async() => {
                 } else if (resp.data.user.user_type === '3') {
                     window.location.href = '/portero'
                 }
+
             })
         })
     });

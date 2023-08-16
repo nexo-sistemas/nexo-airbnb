@@ -76,7 +76,7 @@ export default async (modalAddUnidad) => {
     };
 
     const columnDefs = [
-        { field: "entidadnombre", headerName: "Entidad Inmobiliaria", width: 350 },
+        { field: "entidadNombre", headerName: "Entidad Inmobiliaria", width: 350 },
         { field: "departamento", headerName: "Unidad Inmobiliaria", width: 200 },
         { field: "propietario", headerName: "Propietario", width: 350 },
         {

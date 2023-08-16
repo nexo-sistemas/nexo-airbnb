@@ -24,14 +24,14 @@ class FichaController extends Controller
             (SELECT unidad_inmobiliaria.departamento FROM unidad_inmobiliaria WHERE unidad_inmobiliaria.id = ficha.departamento_id) departamento,
             (SELECT tipo_documento.tipo FROM tipo_documento WHERE tipo_documento.id = users.tipo_documento_id) tipodocumento,
             users.numero_documento,
-            to_char(ficha.ingreso, '%d/%m/%Y %H:%i') ingreso,
-            to_char(ficha.salida, '%d/%m/%Y %H:%i') salida
+            DATE_FORMAT(ficha.ingreso, '%d/%m/%Y %H:%i') ingreso,
+            DATE_FORMAT(ficha.salida, '%d/%m/%Y %H:%i') salida
             FROM ficha
             JOIN ficha_user ON ficha_user.ficha_id = ficha.id AND ficha_user.estado = TRUE
             JOIN users ON ficha_user.user_id = users.id AND users.estado = TRUE AND users.user_type = '4'
             WHERE ficha.estado = TRUE
             AND ficha.entidad_id = ?
-            AND ficha.salida + INTERVAL '1 day' > now()
+            AND DATE_ADD(ficha.salida, interval 1 day) > NOW()
             ", [$request->e])
         ]);
     }
@@ -48,11 +48,10 @@ class FichaController extends Controller
      */
     public function store(Request $request)
     {
-        $entidad = Entidad::find($request->key);
         $directory = 'app-arbn';
         $ficha = new Ficha();
-        $ficha->entidad_id = $entidad->id;
-        $ficha->departamento = $request->departamento;
+        $ficha->entidad_id = $request->entidad;
+        $ficha->departamento_id = $request->departamento_id;
         $ficha->estacionamiento = $request->estacionamiento ?? "";
         $ficha->numero_placa = $request->numero_placa ?? "";
         $ficha->visitas =  $request->visitas ?? "";
@@ -64,9 +63,12 @@ class FichaController extends Controller
         $adjunto = "";
         for ($i = 1; $i <= $request->numero_huesped; $i++) {
 
-            if ($request->hasFile('adjunto-' . $i)) {
-                $adjunto = $request->file('adjunto-' . $i)->store($directory, 'vultr');
-            }
+
+
+            //if ($request->hasFile('adjunto-' . $i)) {
+                //$adjunto = $request->file('adjunto-' . $i)->store($directory, 'vultr');
+            //}
+
 
             $user = new User();
             $user->nombre  = $request->input("nombre-" . $i);
@@ -74,18 +76,18 @@ class FichaController extends Controller
             $user->tipo_documento_id = $request->input("tipo_documento_id-" . $i);
             $user->numero_documento = $request->input("numero_documento-" . $i);
             $user->user_type = '4';
-            $user->adjunto = $adjunto;
             $user->save();
 
             $fichaUser = new FichaUser();
-            $fichaUser->ficha_id = $ficha->id;
-            $fichaUser->user_id = User::find($user->key)->id;
+            $fichaUser->ficha_id = Ficha::find($ficha->uuid)->id;
+            $fichaUser->user_id = User::find($user->uuid)->id;
             $fichaUser->save();
         }
 
         return response()->json([
             'ok' => true,
-            'message' => "Se guardo correctamente"
+            'message' => "Se guardo correctamente",
+            'ficha' => $ficha
         ]);
     }
 
@@ -99,10 +101,10 @@ class FichaController extends Controller
             ficha.id fichaID,
             ficha.entidad_id,
             users.id users_id,
-            users.`key` users_key,
+            users.`uuid` users_key,
             users.nombre,
             IFNULL(users.apellido,'') apellido,
-            (SELECT unidad_inmobiliaria.departamento FROM unidad_inmobiliaria WHERE unidad_inmobiliaria.id = ficha.departamento) departamento,
+            (SELECT unidad_inmobiliaria.departamento FROM unidad_inmobiliaria WHERE unidad_inmobiliaria.id = ficha.departamento_id) departamento,
             (SELECT tipo_documento.tipo FROM tipo_documento WHERE tipo_documento.id = users.tipo_documento_id) tipodocumento,
             users.numero_documento,
             ficha.ingreso,ficha.salida,
@@ -194,7 +196,7 @@ class FichaController extends Controller
                     SELECT JSON_OBJECT('numPropietario',us.celular,'departamento',uni.departamento)
                     FROM unidad_inmobiliaria uni
                     JOIN users us ON uni.propietario = us.id AND us.estado = TRUE
-                    WHERE uni.estado = TRUE AND uni.id = f.departamento
+                    WHERE uni.estado = TRUE AND uni.id = f.departamento_id
                 ) dataPropietario
                 FROM ficha_user fu
                 JOIN ficha f ON fu.ficha_id = f.id AND f.estado = TRUE

@@ -21,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login/propietario', [PropietarioController::class, 'login_propietario']);
+
+
+
 
 Route::group([
     'middleware' => ['auth:sanctum']
@@ -28,6 +32,7 @@ Route::group([
     Route::resource('/entidades', EntidadController::class);
     Route::resource('/unidades', UnidadInmobiliariaController::class);
     Route::get('/unidades/propietarios/{entidad}', [UnidadInmobiliariaController::class, 'userEntidad']);
+    Route::get('/unidades/{uuidUsuario}/{entidadID}', [UnidadInmobiliariaController::class, 'unidadXEntidad']);
     Route::resource('/propietarios', PropietarioController::class);
     Route::get('/propietarios/phone/{phone}', [PropietarioController::class, 'showPhone']);
     Route::resource('/conserje', ConserjeController::class);
@@ -37,8 +42,6 @@ Route::group([
 });
 
 Route::resource('/ficha', FichaController::class);
-
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

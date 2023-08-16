@@ -1,4 +1,4 @@
-import { alertMessage, form_data, nxmodal } from "../function";
+import { alertMessage, form_data, nxmodal, serialize } from "../function";
 import fichas from "../functions/fichas";
 import mensagge from "../functions/mensagge";
 import Compressor from 'compressorjs';
@@ -7,6 +7,7 @@ import cerrarSession from "../functions/cerrar-session";
 export default (async () => {
 
     let formFichaDetalle;
+    let adjuntoData = {};
 
     window._user = JSON.parse(localStorage.getItem('_user'));
     window.modalQRWhatsapp = nxmodal(
@@ -75,7 +76,7 @@ export default (async () => {
                         let dataPropietario = JSON.parse(data.response.dataPropietario);
                         sendMessage({
                             numero: dataPropietario.numPropietario,
-                            message: mensagge(data.response)
+                            message: adjuntoData//mensagge(data.response, adjuntoData)
                         })
 
                         document.getElementById('loading-_-').classList.remove('loadingActive');
@@ -101,6 +102,8 @@ export default (async () => {
         e.stopPropagation()
     })
 
+
+
     document.getElementById("flicha-detalle").addEventListener('change', async (e) => {
         formFichaDetalle = new FormData()
         if (e.target.id === "adjunto") {
@@ -123,6 +126,8 @@ export default (async () => {
             } else {
                 formFichaDetalle.append('file', file)
             }
+
+            console.log(serialize(formFichaDetalle))
         }
 
     })

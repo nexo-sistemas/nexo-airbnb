@@ -3,6 +3,24 @@ import { alertMessage, form_data, nxmodal } from "../function";
 
 export default (async () => {
 
+    const unidades = async (entidad, uuidUsuario) => {
+        let html = `<option selected value="">Seleccionar</option>`;
+        var {data} = await axios.get(`${apiURL}/unidades/${uuidUsuario}/${entidad}`);
+        if( data.ok) {
+            data.response.map((item) => {
+                html+= `<option value="${item.id}">${item.departamento}</option>`
+            })
+            document.getElementById('departamento').innerHTML = html;
+        }
+    }
+
+    await unidades(document.getElementById('entidad').value, document.getElementById('uuidUsuario').value);
+
+    document.getElementById('entidad').addEventListener('change', async(e) => {
+        await unidades(e.target.value, document.getElementById('uuidUsuario').value);
+    })
+
+
     nxmodal(document.getElementById("modalPoliticaPrivacidad")).show();
 
 
@@ -41,5 +59,7 @@ export default (async () => {
             formGuardarFicha.classList.add("was-validated");
         }
     });
+
+
 
 })()
