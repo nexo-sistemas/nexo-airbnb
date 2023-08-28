@@ -137,7 +137,7 @@ export default async (resp, administrador = false, dataDepartamentos = []) => {
 
     return `
         <form class="needs-validation" id="formDetalleFicha" novalidate="">
-            <input type="hidden" name="fichaID" id="fichaID__" value="${resp.fichaID}">
+            <input type="hidden" name="fichaID" id="fichaID__" value="${resp.fichauuid}">
             <input type="hidden" name="user_key__" id="user_key__" value="${resp.users_key}">
             <div class="row">
                 <div class="col-md-6 col-lg-3">

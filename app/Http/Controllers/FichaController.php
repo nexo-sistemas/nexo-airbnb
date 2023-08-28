@@ -102,6 +102,7 @@ class FichaController extends Controller
     {
         $fichaDetalle = DB::select(
             "SELECT
+            ficha.uuid fichauuid,
             ficha.id fichaID,
             ficha.entidad_id,
             users.id users_id,
