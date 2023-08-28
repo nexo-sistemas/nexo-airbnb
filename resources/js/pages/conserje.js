@@ -156,12 +156,14 @@ export default (async () => {
         formFichaDetalle.append('nanme', 'Hola que tal')
         if (e.target.id === "adjunto") {
             const file = e.target.files[0];
+            console.error(file.size);
+            console.error(file.type);
             if (!file) {
                 return;
             }
             let typeFile = file.type.split('/');
             if (typeFile[0] === "image") {
-                if (file.size > 3145728) {
+                if (file.size > 500000) {
                     new Compressor(file, {
                         quality: 0.3,
                         success(result) {

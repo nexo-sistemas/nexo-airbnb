@@ -63,7 +63,7 @@ return [
             'region' => env('VULTR_REGION'),
             'bucket' => env('VULTR_BUCKET'),
             'endpoint' => env('VULTR_ENDPOINT'),
-            'visibility' => 'private',
+            'visibility' => 'public'
         ],
 
     ],

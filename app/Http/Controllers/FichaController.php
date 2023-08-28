@@ -199,8 +199,6 @@ class FichaController extends Controller
         $user->adjunto_conserje = $adjunto;
         $user->save();
 
-        $image = base64_encode(file_get_contents($request->file('file')));
-
         $returnResponse = DB::select(
             "SELECT f.*,
                 (
@@ -222,7 +220,7 @@ class FichaController extends Controller
             'ok' => true,
             'message' => "Se guardo correctamente",
             'response' => $returnResponse,
-            'file' => $image
+            'file' => 'https://sjc1.vultrobjects.com/airbnb/'.$adjunto
         ]);
 
     }

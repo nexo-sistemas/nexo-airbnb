@@ -81,7 +81,7 @@ const sendMessageMedia = async (options = {}) => {
                 },
                 mediaMessage : {
                     mediatype : "image",
-                    fileName : "image.jpeg",
+                    fileName : "image.jpg",
                     caption: options.message,
                     media : options.media
                 }

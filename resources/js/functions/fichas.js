@@ -82,6 +82,11 @@ export default async (userType = '3', modalDetalle) => {
         });
     };
 
+    const detalleFicha = async (resp) => {
+        var { data } = await axios.get(`${apiURL}/ficha/${resp.users_id}`);
+        document.getElementById('flicha-detalle').innerHTML = await fichaDetalle(data.response, administrador__, data.unidades)
+        modalDetalle.show()
+    }
 
     let administrador__ = (userType === '2') ? true : false;
 
@@ -102,9 +107,7 @@ export default async (userType = '3', modalDetalle) => {
             cellRendererParams: {
                 userType: userType,
                 clickedDetalle: async (data) => {
-                    var { data } = await axios.get(`${apiURL}/ficha/${data.users_id}`);
-                    document.getElementById('flicha-detalle').innerHTML = await fichaDetalle(data.response, administrador__, data.unidades)
-                    modalDetalle.show()
+                    detalleFicha(data)
                 },
                 clickedDelete: async (data) => {
                     deleteRow(data)
