@@ -29,7 +29,6 @@ export default ( async() => {
                 } else if (resp.data.user.user_type === '3') {
                     window.location.href = '/portero'
                 }
-
             })
         })
     });

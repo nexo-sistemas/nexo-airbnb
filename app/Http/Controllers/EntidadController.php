@@ -22,6 +22,8 @@ class EntidadController extends Controller
             'response' => DB::select("
                 SELECT
                 entidad.nombre,
+                case when entidad.permitir_adjunto = TRUE THEN 'Si'
+                else 'No' END permitir_adjunto,
                 users.usuario usuario,
                 users.password_vista password,
                 entidad.uuid
@@ -51,7 +53,6 @@ class EntidadController extends Controller
             'password' => 'required'
         ]);
 
-
         $usuario = User::where('usuario', $request->usuario)->where('estado', true)->first();
 
         if ($usuario) {
@@ -62,7 +63,6 @@ class EntidadController extends Controller
             ], 422);
         }
 
-
         $user = new User();
         $user->nombre = $request->nombre;
         $user->usuario = $request->usuario;
@@ -71,12 +71,10 @@ class EntidadController extends Controller
         $user->user_type = '2';
         $user->save();
 
-
         $entidad = new Entidad();
         $entidad->nombre = $request->nombre;
+        $entidad->permitir_adjunto = ( $request->permitir_adjunto && $request->permitir_adjunto == 'on' ) ? true :  false;
         $entidad->save();
-
-
 
         $entidadFind = Entidad::find($entidad->uuid);
         $userFind = User::find($user->uuid);
@@ -89,7 +87,8 @@ class EntidadController extends Controller
         return response()->json([
             'ok' => true,
             'response' => [
-                'key' => $entidad->uuid,
+                'uuid' => $entidad->uuid,
+                'permitir_adjunto' => ($entidadFind->permitir_adjunto) ? 'Si' : 'No',
                 'nombre' => $entidadFind->nombre,
                 'usuario' => $userFind->usuario,
                 'password' => $userFind->password_vista,
@@ -134,6 +133,7 @@ class EntidadController extends Controller
 
         $entidad = Entidad::find($keyEntidad);
         $entidad->nombre = $request->nombre;
+        $entidad->permitir_adjunto = ( $request->permitir_adjunto && $request->permitir_adjunto == 'on' ) ? true :  false;
         $entidad->save();
 
         $entidadFind = Entidad::find($entidad->uuid);
@@ -150,8 +150,9 @@ class EntidadController extends Controller
         return response()->json([
             'ok' => true,
             'response' => [
-                'key' => $entidad->uuid,
+                'uuid' => $entidad->uuid,
                 'nombre' => $entidadFind->nombre,
+                'permitir_adjunto' => ($entidadFind->permitir_adjunto) ? 'Si' : 'No',
                 'usuario' => $usuario->usuario,
                 'password' => $usuario->password_vista
             ]

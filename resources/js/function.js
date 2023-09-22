@@ -5,6 +5,21 @@ const form_data = async (element) => {
     return await serialize(form_data);
 };
 
+
+const listarObservaciones = async (fichaId) =>{
+    let html = "";
+    var { data } = await axios.get(`${apiURL}/ficha/historial/${fichaId}`)
+    if ( data.ok ) {
+
+        data.response.map( (resp) => {
+            html+=  `<li class="list-group-item">${resp.observacion}</li>`
+        });
+    }
+
+    document.getElementById('mensajes________').innerHTML = html;
+
+}
+
 const nxtoast = async (option) => {
     const toastLive = document.getElementById("toastPlacement");
     const toastTitle = document.getElementById("toast-title");
@@ -111,5 +126,6 @@ export {
     alertMessage,
     nxmodal,
     nxtoast,
-    serialize
+    serialize,
+    listarObservaciones
 };

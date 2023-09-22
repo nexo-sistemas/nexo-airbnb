@@ -87,17 +87,22 @@ export default (async () => {
     };
 
     const editRow = async (resp) => {
+
+        console.log(resp)
         agregar = false;
         keyEntidad = resp.uuid;
         document.getElementById('title-entidad').innerText = 'Editar entidad'
         document.getElementById('txt-entidad-nombre').value = resp.nombre
         document.getElementById('txt-entidad-usuario').value = resp.usuario;
         document.getElementById('txt-entidad-password').value = resp.password;
+        (resp.permitir_adjunto == 'Si') ? document.getElementById('flexSwitchCheckChecked').setAttribute('checked', true) : document.getElementById('flexSwitchCheckChecked').removeAttribute('checked');
+
         modalAddEntidad.show();
     }
 
     const columnDefs = [
         { field: "nombre", headerName: "Nombre", width: 350 },
+        { field: "permitir_adjunto", headerName: "Adjunto Recepción", width: 350},
         { field: "usuario", headerName: "Usuario Administrador", width: 200 },
         { field: "password", headerName: "Password Administrador", width: 200 },
         {

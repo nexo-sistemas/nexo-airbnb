@@ -86,7 +86,7 @@ export default async (modalPropietario) => {
         {
             field: "link", headerName: "Link del Formulario", width: 350,
             cellRenderer: (resp) => {
-                return `<a  href="${URLAPP}/login-propietario?u=${resp.data.uuid}" target="_blank" style='color: blue'>${URLAPP}/login-propietario?u=${resp.data.uuid}</a>`
+                return `<a  href="${URLAPP}/?u=${resp.data.uuid}" target="_blank" style='color: blue'>${URLAPP}/?u=${resp.data.uuid}</a>`
             }
         },
         {

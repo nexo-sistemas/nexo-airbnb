@@ -1,4 +1,4 @@
-import { alertMessage, form_data, nxmodal, serialize } from "../function";
+import { alertMessage, form_data, listarObservaciones, nxmodal, serialize } from "../function";
 import fichas from "../functions/fichas";
 import mensagge from "../functions/mensagge";
 import Compressor from 'compressorjs';
@@ -56,25 +56,67 @@ export default (async () => {
         }, 1000)
     });
 
-    document.getElementById('foot-modal-detalle')?.addEventListener('click', async (e) => {
+    document.getElementById('flicha-detalle')?.addEventListener('click', async (e) => {
         if (e.target.id === 'btnGuardarDetalleFichaAdministrador') {
+
+            console.log('click')
             const formGuardarDetalleFicha = document.getElementById("flicha-detalle").querySelector('#formDetalleFicha');
-            if (formGuardarDetalleFicha.checkValidity()) {
+
+            if ( document.getElementById('permitir-adjunto').value == '1' ) {
+                if ( document.getElementById('adjunto').value.length > 0) {
+                    document.getElementById('loading-_-').classList.add('loadingActive');
+                    const cstateValidate = await connectionState();
+                    if (cstateValidate?.state === 'open') {
+                        const userKey = document.getElementById('user_key__').value;
+                        formFichaDetalle.append('userKey', userKey);
+                        formFichaDetalle.append('permitirAdjunto', document.getElementById('permitir-adjunto').value);
+                        var { data } = await axios.post(`${apiURL}/ficha/portero/update/adjunto`, formFichaDetalle)
+                        if (data.ok === true) {
+                            formGuardarDetalleFicha.classList.remove('was-validated')
+                            modalDetalle.hide();
+
+                            let dataPropietario = JSON.parse(data.response.dataPropietario);
+                            sendMessageMedia({
+                                numero: dataPropietario.numPropietario,
+                                message: mensagge(data.response, adjuntoData),
+                                media: data.file
+                            })
+
+                            document.getElementById('loading-_-').classList.remove('loadingActive');
+                            await alertMessage(
+                                "success",
+                                "se guardo correctamente."
+                            );
+                        }
+
+                    } else {
+                        await deleteInstance();
+                        await generateQr().then((resp) => {
+                            document.getElementById('loading-_-').classList.remove('loadingActive');
+                        });
+                    }
+
+                } else {
+
+                    await alertMessage(
+                        "danger",
+                        "Tiene que adjuntar una imagen."
+                    );
+
+                    //formGuardarDetalleFicha.classList.add("was-validated");
+                }
+            } else {
                 document.getElementById('loading-_-').classList.add('loadingActive');
                 const cstateValidate = await connectionState();
                 if (cstateValidate?.state === 'open') {
-                    const userKey = document.getElementById('user_key__').value;
-                    formFichaDetalle.append('userKey', userKey);
-                    var { data } = await axios.post(`${apiURL}/ficha/portero/update/adjunto`, formFichaDetalle)
+                    var { data } = await axios.post(`${apiURL}/ficha/portero/update/adjunto`, formGuardarDetalleFicha)
                     if (data.ok === true) {
                         formGuardarDetalleFicha.classList.remove('was-validated')
                         modalDetalle.hide();
-
                         let dataPropietario = JSON.parse(data.response.dataPropietario);
-                        sendMessageMedia({
+                        sendMessage({
                             numero: dataPropietario.numPropietario,
-                            message: mensagge(data.response, adjuntoData),
-                            media: data.file
+                            message: mensagge(data.response),
                         })
 
                         document.getElementById('loading-_-').classList.remove('loadingActive');
@@ -90,9 +132,6 @@ export default (async () => {
                         document.getElementById('loading-_-').classList.remove('loadingActive');
                     });
                 }
-
-            } else {
-                formGuardarDetalleFicha.classList.add("was-validated");
             }
         }
 
@@ -145,10 +184,31 @@ export default (async () => {
             }
         }
 
+
+
         e.stopPropagation()
     })
 
 
+    document.getElementById('formulario__')?.addEventListener('click', async (e) => {
+        if( e.target.id === 'btnGuardarObservacion') {
+            if ( document.getElementById('exampleFormControlTextarea1').value.length > 5) {
+
+                var { data } = axios.post(`${apiURL}/ficha/historial` , {
+                    ficha_id : document.getElementById('_fichaID_').value,
+                    observacion : document.getElementById('exampleFormControlTextarea1').value
+                });
+
+                await listarObservaciones(document.getElementById('_fichaID_').value);
+            } else {
+                await alertMessage(
+                    "danger",
+                    "Tiene que adjuntar una observación."
+                );
+            }
+       }
+
+    })
 
 
     document.getElementById("flicha-detalle").addEventListener('change', async (e) => {
@@ -179,6 +239,8 @@ export default (async () => {
         }
 
     })
+
+
 
     cerrarSession()
 

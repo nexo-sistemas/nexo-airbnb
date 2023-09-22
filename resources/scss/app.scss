@@ -64,7 +64,7 @@ $cNegro: #1d1e1c;
     position: fixed;
     bottom: 5%;
     right: 5%;
-    z-index: 2000;
+    z-index: 99999;
     padding: 2rem 4rem;
     background-color: rgba($cBlanco, 0.85);
     border-left: 0.5rem solid;
@@ -259,4 +259,8 @@ hr {
 
 .rag-green {
     background-color: lightgreen;
+}
+
+.offcanvas {
+    z-index: 9999999 !important;
 }

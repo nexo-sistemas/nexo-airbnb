@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ConserjeController;
 use App\Http\Controllers\EntidadController;
 use App\Http\Controllers\FichaController;
+use App\Http\Controllers\FichaHistorialController;
 use App\Http\Controllers\PropietarioController;
 use App\Http\Controllers\UnidadInmobiliariaController;
 use Illuminate\Http\Request;
@@ -23,9 +24,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/login/propietario', [PropietarioController::class, 'login_propietario']);
 
-
-
-
 Route::group([
     'middleware' => ['auth:sanctum']
 ], function () {
@@ -40,6 +38,8 @@ Route::group([
     Route::put('/ficha/administrador/update/fechas/{id}', [FichaController::class, 'updateFechasAdministrador']);
     Route::post('/ficha/portero/update/adjunto', [FichaController::class, 'updateAdjunto']);
     Route::post('/ficha/portero/update/fecha-salida', [FichaController::class, 'updateFechaSalida']);
+    Route::get('ficha/historial/{fichaID}', [FichaHistorialController::class, 'index']);
+    Route::post('ficha/historial', [FichaHistorialController::class, 'store']);
 });
 
 Route::resource('/ficha', FichaController::class);

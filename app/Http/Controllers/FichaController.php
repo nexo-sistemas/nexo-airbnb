@@ -121,12 +121,14 @@ class FichaController extends Controller
             users.hora_ingreso hora_ingreso,
             ficha.estacionamiento,
             ficha.numero_placa,
+            entidad.permitir_adjunto,
             CASE ficha.visitas WHEN '1' THEN 'LIBRE' ELSE 'Previa autorización' END visita,
             ficha.infantes  infantes,
             ficha.numero_huesped
             FROM ficha
             JOIN ficha_user ON ficha.id = ficha_user.ficha_id AND ficha_user.estado = TRUE
             JOIN users ON ficha_user.user_id = users.id AND users.estado = TRUE
+            JOIN entidad ON ficha.entidad_id = entidad.id
             where ficha.estado = TRUE AND users.id = ?",
             [$id]
         )[0];
@@ -183,22 +185,34 @@ class FichaController extends Controller
 
     public function updateAdjunto(Request $request)
     {
+
         date_default_timezone_set("America/Lima");
 
-        $directory = 'app-arbn';
-        if (!$request->hasFile('file')) {
-            return response()->json([
-                'ok' => false,
-                'errors' => ['Ingresar un  adjunto'],
-            ], 422);
+
+
+        if ($request->permitirAdjunto == 1) {
+
+            $directory = 'app-arbn';
+            if (!$request->hasFile('file')) {
+                return response()->json([
+                    'ok' => false,
+                    'errors' => ['Ingresar un  adjunto'],
+                ], 422);
+            }
+
+            $adjunto = $request->file('file')->store($directory, 'vultr');
+
+            $user = User::find($request->userKey);
+            $user->hora_ingreso = date("d/m/Y H:i");
+            $user->adjunto_conserje = $adjunto;
+            $user->save();
+
+        } else {
+            $adjunto = '';
+            $user = User::find($request->user_key__);
+            $user->hora_ingreso = date("d/m/Y H:i");
+            $user->save();
         }
-
-
-        $adjunto = $request->file('file')->store($directory, 'vultr');
-        $user = User::find($request->userKey);
-        $user->hora_ingreso = date("d/m/Y H:i");
-        $user->adjunto_conserje = $adjunto;
-        $user->save();
 
         $returnResponse = DB::select(
             "SELECT f.*,

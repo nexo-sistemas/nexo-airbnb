@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entidad', function (Blueprint $table) {
+        Schema::create('table_historial_ficha', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid')->unique();
-            $table->string('nombre', 200);
-            $table->boolean('permitir_adjunto')->default(false);
-            $table->boolean('estado')->default(true);
+            $table->integer('ficha_id');
+            $table->text('observacion');
+            $table->string('fechaRegistro');
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entidad');
+        Schema::dropIfExists('table_historial_ficha');
     }
 };

@@ -47,6 +47,13 @@
                                 <input type="text" class="form-control" id="txt-entidad-password" name="password"
                                     required>
                             </div>
+
+                            <div class="col-12">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="permitir_adjunto">
+                                    <label class="form-check-label" for="flexSwitchCheckChecked"><b>Permitir que el Conserje Adjunte Imagen ?</b></label>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
